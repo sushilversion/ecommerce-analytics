@@ -1,0 +1,6 @@
+# Copy this file to terraform.tfvars and fill in your values
+
+aws_region     = "ap-south-1"  # Change to your preferred region
+ami_id         = "ami-0dee22c13ea7a9a67"  # Ubuntu 22.04 for us-east-1
+key_pair_name  = "data-analysis-key.pem"  # Replace with your EC2 key pair name
+your_ip_cidr   = "106.192.132.220/0"  # Replace with your IP (get it from: curl -4 ifconfig.me) format: x.x.x.x/32

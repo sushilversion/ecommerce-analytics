@@ -1,0 +1,368 @@
+{
+  "dashboard": {
+    "title": "E-Commerce Platform Analytics - Hadoop Cluster",
+    "tags": ["ecommerce", "hadoop", "sales"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "📊 Platform Overview",
+        "type": "text",
+        "gridPos": { "x": 0, "y": 0, "w": 24, "h": 2 },
+        "options": {
+          "content": "# E-Commerce Analytics Platform\n\nReal-time monitoring of Hadoop cluster processing customer orders, clickstream data, and sales analytics.",
+          "mode": "markdown"
+        }
+      },
+      {
+        "id": 2,
+        "title": "Total Orders Storage (HDFS)",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 2, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "hadoop_namenode_capacityused",
+            "legendFormat": "Used Storage",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes",
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "green" },
+                { "value": 70, "color": "yellow" },
+                { "value": 90, "color": "red" }
+              ]
+            }
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "graphMode": "area"
+        }
+      },
+      {
+        "id": 3,
+        "title": "Active Data Nodes (Warehouse)",
+        "type": "stat",
+        "gridPos": { "x": 6, "y": 2, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "hadoop_namenode_numlivedatanodes",
+            "legendFormat": "Live Nodes",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "red" },
+                { "value": 1, "color": "yellow" },
+                { "value": 2, "color": "green" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Order Processing Capacity",
+        "type": "gauge",
+        "gridPos": { "x": 12, "y": 2, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "100 * (hadoop_resourcemanager_allocatedmb / (hadoop_resourcemanager_allocatedmb + hadoop_resourcemanager_availablememb))",
+            "legendFormat": "Memory Usage %",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "max": 100,
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "green" },
+                { "value": 70, "color": "yellow" },
+                { "value": 90, "color": "red" }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "Analytics Jobs Running",
+        "type": "stat",
+        "gridPos": { "x": 18, "y": 2, "w": 6, "h": 4 },
+        "targets": [
+          {
+            "expr": "hadoop_resourcemanager_appsrunning",
+            "legendFormat": "Running Jobs",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {
+              "mode": "palette-classic"
+            }
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "Data Ingestion Rate (Orders, Clickstream)",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "rate(hadoop_namenode_capacityused[5m])",
+            "legendFormat": "Data Ingestion Rate",
+            "refId": "A"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "Bps",
+            "label": "Bytes/sec"
+          }
+        ],
+        "options": {
+          "tooltip": {
+            "mode": "multi"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Customer Analytics Processing",
+        "type": "graph",
+        "gridPos": { "x": 12, "y": 6, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "hadoop_resourcemanager_appsrunning",
+            "legendFormat": "Running Analytics",
+            "refId": "A"
+          },
+          {
+            "expr": "hadoop_resourcemanager_appspending",
+            "legendFormat": "Queued Jobs",
+            "refId": "B"
+          },
+          {
+            "expr": "hadoop_resourcemanager_appscompleted",
+            "legendFormat": "Completed Today",
+            "refId": "C"
+          }
+        ],
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "bottom"
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Order Data Replication Health",
+        "type": "stat",
+        "gridPos": { "x": 0, "y": 14, "w": 8, "h": 4 },
+        "targets": [
+          {
+            "expr": "hadoop_namenode_underreplicatedblocks",
+            "legendFormat": "Under-replicated",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "green" },
+                { "value": 1, "color": "yellow" },
+                { "value": 10, "color": "red" }
+              ]
+            }
+          }
+        },
+        "options": {
+          "colorMode": "background",
+          "text": {
+            "titleSize": 14,
+            "valueSize": 40
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Data Warehouse Capacity",
+        "type": "piechart",
+        "gridPos": { "x": 8, "y": 14, "w": 8, "h": 8 },
+        "targets": [
+          {
+            "expr": "hadoop_namenode_capacityused",
+            "legendFormat": "Used (Orders, Customers, Clickstream)",
+            "refId": "A"
+          },
+          {
+            "expr": "hadoop_namenode_capacityremaining",
+            "legendFormat": "Available",
+            "refId": "B"
+          }
+        ],
+        "options": {
+          "legend": {
+            "displayMode": "table",
+            "placement": "right",
+            "values": ["value", "percent"]
+          },
+          "pieType": "donut"
+        },
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes"
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "Processing Resource Allocation",
+        "type": "bargauge",
+        "gridPos": { "x": 16, "y": 14, "w": 8, "h": 8 },
+        "targets": [
+          {
+            "expr": "hadoop_resourcemanager_allocatedmb",
+            "legendFormat": "Allocated Memory (Analytics)",
+            "refId": "A"
+          },
+          {
+            "expr": "hadoop_resourcemanager_availablememb",
+            "legendFormat": "Available Memory",
+            "refId": "B"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "mbytes",
+            "max": 8192,
+            "thresholds": {
+              "steps": [
+                { "value": 0, "color": "green" },
+                { "value": 4096, "color": "yellow" },
+                { "value": 6144, "color": "red" }
+              ]
+            }
+          }
+        },
+        "options": {
+          "displayMode": "gradient",
+          "orientation": "horizontal"
+        }
+      },
+      {
+        "id": 11,
+        "title": "NameNode Health (Order Management System)",
+        "type": "graph",
+        "gridPos": { "x": 0, "y": 22, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "java_lang_memory_heapmemoryusage_used{job='hadoop-namenode'} / 1048576",
+            "legendFormat": "Heap Used (MB)",
+            "refId": "A"
+          },
+          {
+            "expr": "java_lang_memory_heapmemoryusage_max{job='hadoop-namenode'} / 1048576",
+            "legendFormat": "Heap Max (MB)",
+            "refId": "B"
+          }
+        ],
+        "yaxes": [
+          {
+            "format": "mbytes",
+            "label": "Memory"
+          }
+        ],
+        "alert": {
+          "conditions": [
+            {
+              "evaluator": {
+                "params": [80],
+                "type": "gt"
+              },
+              "operator": {
+                "type": "and"
+              },
+              "query": {
+                "params": ["A", "5m", "now"]
+              },
+              "reducer": {
+                "params": [],
+                "type": "avg"
+              },
+              "type": "query"
+            }
+          ],
+          "name": "NameNode Memory Alert"
+        }
+      },
+      {
+        "id": 12,
+        "title": "Worker Nodes Status (Processing Servers)",
+        "type": "table",
+        "gridPos": { "x": 12, "y": 22, "w": 12, "h": 8 },
+        "targets": [
+          {
+            "expr": "hadoop_datanode_remaining{job='hadoop-datanodes'}",
+            "format": "table",
+            "instant": true,
+            "refId": "A"
+          }
+        ],
+        "options": {
+          "showHeader": true
+        },
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "align": "auto",
+              "displayMode": "auto"
+            }
+          }
+        }
+      },
+      {
+        "id": 13,
+        "title": "📈 Business Metrics Context",
+        "type": "text",
+        "gridPos": { "x": 0, "y": 30, "w": 24, "h": 3 },
+        "options": {
+          "content": "### Real-time E-Commerce Analytics\n\n**Data Sources:**\n- **Orders:** Customer purchases, payment processing, fulfillment tracking\n- **Clickstream:** User behavior, product views, cart additions, conversion funnels\n- **Customers:** User profiles, segmentation, lifetime value analysis\n\n**Analytics Use Cases:**\n- Sales by region and product category\n- Customer segmentation and cohort analysis\n- Conversion rate optimization\n- Inventory demand forecasting\n- Fraud detection and anomaly detection\n- Recommendation engine training data",
+          "mode": "markdown"
+        }
+      }
+    ],
+    "refresh": "10s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "annotations": {
+      "list": [
+        {
+          "datasource": "Prometheus",
+          "enable": true,
+          "expr": "changes(hadoop_resourcemanager_appsrunning[1m]) > 0",
+          "name": "New Analytics Job Started",
+          "tagKeys": "job"
+        }
+      ]
+    }
+  }
+}
